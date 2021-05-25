@@ -1,10 +1,10 @@
 spring:
   datasource:
 #    mysql8.0 42.193.48.70主机上3307数据库（正式上线） ---> 添加完数据后要重启服务器
-    url: jdbc:mysql://42.193.48.70:3307/grade
+#    url: jdbc:mysql://42.193.48.70:3307/grade
 
 #    本地数据库（测试）
-#    url: jdbc:mysql://localhost:3306/grade
+    url: jdbc:mysql://localhost:3306/grade
 
 #    mysql5.7
 #    url: jdbc:mysql://124.70.41.214:3306/blue?useUnicode=true&characterEncoding=utf8&useSSL=false
