@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cqupt.springbootweb.mapper.FileMapper">
+    <!--   useGeneratedKeys="true" keyProperty="id"用于获取自增值,
+    然后只需要在controller中使用mapper方法后，即可在insert后的实体中直接获得数据库自增值 -->
+
+    <resultMap id="mos" type="com.cqupt.springbootweb.bean.ReturnFile">
+        <result column="picture_id" property="pid" />
+        <result column="true_score" property="score" />
+        <collection property="rePids" ofType="com.cqupt.springbootweb.bean.PidForReference"
+                    column="picture_id" select="com.cqupt.springbootweb.mapper.ReferenceMapper.selectRefPidsByPid">
+        </collection>
+    </resultMap>
+
+<!--    <resultMap id="ref" type="com.cqupt.springbootweb.bean.PidForReference">-->
+<!--        <result column="ref_picture_id" property="pid" />-->
+<!--    </resultMap>-->
+
+    <select id="createMos" resultMap="mos">
+        select * from picture where true_score is not NULL;
+    </select>
+    <select id="picCount" resultType="java.lang.Integer">
+        select count(*) from picture where is_reference = 0;
+    </select>
+
+    <insert id="insertFile" useGeneratedKeys="true" keyProperty="pictureId">
+        insert into picture (path, name, is_reference) values (#{path}, #{name}, #{isReference})
+    </insert>
+
+    <update id="updateFile">
+        update picture set subjects_count = #{count} where picture_id = #{id}
+    </update>
+
+    <update id="updateTrueScoreByPictureId">
+        update picture set true_score = #{trueScore} where picture_id = #{pid};
+    </update>
+
+    <update id="updateNameByPictureId">
+        update picture set name = #{name} where picture_id = #{pid};
+    </update>
+
+</mapper>

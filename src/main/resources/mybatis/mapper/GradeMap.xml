@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cqupt.springbootweb.mapper.GradeMapper">
+    <!--   useGeneratedKeys="true" keyProperty="id"用于获取自增值,
+    然后只需要在controller中使用mapper方法后，即可在insert后的实体中直接获得数据库自增值 -->
+
+    <!--使用resultMap映射查询字段count(*)-->
+    <resultMap id="BaseResultMap" type="com.cqupt.springbootweb.bean.CountAndPictureId">
+        <id column="COUNT(*)" property="count" />
+        <result column="picture_id" property="pictureId" />
+     </resultMap>
+
+    <resultMap id="subjectsCount" type="com.cqupt.springbootweb.bean.SubjectCount">
+        <result column="picture_id" property="pictureId" />
+        <result column="subjects_count" property="subjectCount" />
+    </resultMap>
+
+    <resultMap id="validCount" type="com.cqupt.springbootweb.bean.Valid">
+        <result column="COUNT(*)" property="count" />
+        <result column="user_id" property="uid" />
+    </resultMap>
+
+    <resultMap id="meanAndSd" type="com.cqupt.springbootweb.bean.MeanAndSD">
+        <result column="AVG(score)" property="mean" />
+        <result column="STDDEV(score)" property="sd" />
+        <result column="user_id" property="userId" />
+    </resultMap>
+
+    <resultMap id="mos" type="com.cqupt.springbootweb.bean.Mos">
+        <result column="picture_id" property="pid" />
+        <result column="COUNT(*)" property="reScoreCount" />
+        <result column="AVG(re_scaled_score)" property="meanReScore" />
+    </resultMap>
+
+
+    <update id="updateIsValid">
+        update grade set is_valid = 0 where picture_id = #{pId} and user_id = #{uId};
+    </update>
+
+    <update id="updateIsValidToZero">
+        update grade set is_valid = 0 where user_id = #{uid};
+    </update>
+
+    <update id="updateZScore">
+        update grade set z_score = #{zScore} where picture_id = #{picId} and user_id = #{uId} and is_valid = 1
+    </update>
+
+    <update id="updateReScaledScore">
+        update grade set re_scaled_score = ((z_score - #{min}) / #{sub}) * 100 where is_valid = 1;
+    </update>
+
+    <select id="selectCount" resultMap="BaseResultMap">
+        SELECT COUNT(*), picture_id FROM grade GROUP BY picture_id;
+    </select>
+
+    <select id="selectSbcount"
+            resultMap="subjectsCount">
+        SELECT g.picture_id, p.subjects_count FROM grade g, picture p WHERE g.picture_id = p.picture_id GROUP BY g.picture_id;
+    </select>
+
+    <select id="totalCount" resultType="java.lang.Integer">
+        select count(*) from grade where user_id = #{uid};
+    </select>
+
+    <select id="selectValidCount" resultMap="validCount">
+        SELECT COUNT(*), user_id FROM grade WHERE is_valid = 0 GROUP BY user_id;
+    </select>
+
+    <!--添加条件is_valid = 1排除异常值-->
+    <select id="selectMeanAndSd" resultMap="meanAndSd">
+        SELECT AVG(score), STDDEV(score), user_id FROM grade where is_valid = 1 GROUP BY user_id;
+    </select>
+
+    <select id="selectMos" resultMap="mos">
+        SELECT picture_id, AVG(re_scaled_score), COUNT(*) FROM grade where is_valid = 1 GROUP BY picture_id;
+    </select>
+
+</mapper>

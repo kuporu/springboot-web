@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cqupt.springbootweb.mapper.ReferenceMapper">
+
+    <resultMap id="ref" type="com.cqupt.springbootweb.bean.PidForReference">
+        <result column="ref_picture_id" property="pid" />
+    </resultMap>
+
+    <select id="selectRefPidsByPid" resultMap="ref">
+        select * from reference where picture_id = #{picture_id};
+    </select>
+
+</mapper>

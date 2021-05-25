@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cqupt.springbootweb.mapper.UserMapper">
+<!--    <select id="getUser" resultType="com.cqupt.springbootweb.bean.User">-->
+<!--        select * from user where id = #{id}-->  <!--useGeneratedKeys="true" keyProperty="userId"-->
+<!--    </select>-->
+    <insert id="insertUser" >
+        insert into user (user_name, password, total_count, invalid_count, page_count) values (#{userName}, #{password}, #{totalCount}, #{invalidCount}, 0)
+    </insert>
+    <update id="updateTotalCount">
+        update user set total_count = #{count} where user_id = #{uid};
+    </update>
+    <update id="updateInvalidCount">
+        update user set invalid_count = #{invalidCount} where user_id = #{uid};
+    </update>
+    <update id="updatePageCount">
+        update user set page_count = #{pageCount} where user_id = #{uid};
+    </update>
+    <select id="selectByPasswordAndUserName" resultType="com.cqupt.springbootweb.bean.User">
+        select * from user where user_name = #{userName} and password = #{password}
+    </select>
+</mapper>

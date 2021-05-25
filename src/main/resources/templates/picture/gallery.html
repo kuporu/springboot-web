@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="ThemeBucket">
+<!--  <link rel="shortcut icon" href="#" type="image/png">-->
+
+  <title>Media Gallery</title>
+
+  <link href="css/style.css" rel="stylesheet">
+  <link href="css/style-responsive.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/self_style.css">
+
+  <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+  <script src="js/html5shiv.js"></script>
+  <script src="js/respond.min.js"></script>
+  <![endif]-->
+</head>
+
+<body class="sticky-header">
+
+<section>
+    <!--    引入左边公共部分-->
+    <div th:replace="common :: #commonLeft"></div>
+    
+    <!-- main content start-->
+    <div class="main-content" >
+<!--        引入上边公共部分-->
+        <div th:replace="common :: commonTop"></div>
+
+        <!--body wrapper start-->
+        <div class="wrapper">
+            <div class="row">
+                <div class="col-sm-3">
+                    <section class="panel">
+                        <header class="panel-heading">
+                            参考图像
+                        </header>
+                        <div class="panel-body">
+                            <div id="gallery1" class="media-gal" >
+<!--从th:each放置的标签处（而不是该标签包含的标签）开始循环-->
+                                <div  th:each="record : ${rePage.getRecords()}" style="padding-bottom: 2px">
+<!--                                    <a href="#myModal" data-toggle="modal">-->
+                                        <img th:src="${record.getName()}" alt="" width="256" height="256"/>
+<!--                                    </a>-->
+                                </div>
+                            </div>
+                            <div class="dataTables_info" id="dynamic-table_info">
+                                当前第[[${rePage.getCurrent()}]]页 总计[[${rePage.getPages()}]]页 共[[${rePage.getTotal()}]]张参考图像
+                            </div>
+                            <div class="col-md-12 text-center clearfix">
+                                <ul class="pagination">
+                                    <li><a href="#">«</a></li>
+<!--翻页时参考图像页数改变而融合图像页数不改变-->
+                                    <li th:class="${prod == rePage.getCurrent() ? 'active': ''}" th:each="prod : ${#numbers.sequence(1,rePage.getPages())}">
+                                        <a th:href="@{/gallery.html(re_pn=${prod}, pn=${page.getCurrent()})}" th:text="${prod}">num</a>
+                                    </li>
+                                    <li><a href="#">»</a></li>
+                                </ul>
+                            </div>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            <h4 class="modal-title">Edit Media Gallery</h4>
+                                        </div>
+
+                                        <div class="modal-body row">
+
+                                            <div class="col-md-5 img-modal">
+                                                <img src="images/gallery/image1.jpg" alt="">
+                                                <a href="#" class="btn btn-white btn-sm"><i class="fa fa-pencil"></i> Edit Image</a>
+                                                <a href="#" class="btn btn-white btn-sm"><i class="fa fa-eye"></i> View Full Size</a>
+
+                                                <p class="mtop10"><strong>File Name:</strong> img01.jpg</p>
+                                                <p><strong>File Type:</strong> jpg</p>
+                                                <p><strong>Resolution:</strong> 300x200</p>
+                                                <p><strong>Uploaded By:</strong> <a href="#">ThemeBucket</a></p>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <div class="form-group">
+                                                    <label> Name</label>
+                                                    <input id="name" value="img01.jpg" class="form-control">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label> Tittle Text</label>
+                                                    <input id="title" value="awesome image" class="form-control">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label> Description</label>
+                                                    <textarea rows="2" class="form-control"></textarea>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label> Link URL</label>
+                                                    <input id="link" value="images/gallery/img01.jpg" class="form-control">
+                                                </div>
+                                                <div class="pull-right">
+                                                    <button class="btn btn-danger btn-sm" type="button">Delete</button>
+                                                    <button class="btn btn-success btn-sm" type="button">Save changes</button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- modal -->
+
+                        </div>
+                    </section>
+                </div>
+                <div class="col-sm-6">
+
+                    <section class="panel">
+                        <header class="panel-heading">
+                            融合图像 当前第[[${count}]]张 共[[${page.getTotal()}]]张
+                        </header>
+                        <div class="panel-body">
+
+                            <div id="gallery2" class="media-gal">
+<!--                                <div>-->
+<!--                                    <a href="#myModal" data-toggle="modal">-->
+<!--请求头为 http://localhost:8080/img1.bmp,设置了静态资源给出图片名可以直接返回图片-->
+                                        <img th:src="@{/{img}(img=${page.getRecords().get(0).getName()})}" width="400px" height="400px" alt=""/>
+<!--                                    </a>-->
+<!--                                </div>-->
+                            </div>
+<!--                            <div class="dataTables_info" id="dynamic-table_info_2">-->
+<!--                                当前第[[${page.getCurrent()}]]张 共[[${page.getTotal()}]]张融合后图像-->
+<!--                            </div>-->
+
+                            <div class="col-md-12 text-center clearfix" style="padding-left: 0">
+<!--滑动模块开始-->
+<!--                                <div th:replace=" common:: sliderBlock"></div>-->
+<!--滑动模块结束-->
+                                <div th:fragment="sliderBlock">
+                                    <form class="range">
+<!--如果已经评分（model域中含有grade关键字,grade中存储查询到的评分信息），则该div模块不显示，否则显示该模块-->
+                                        <div style="display: block" id="allInput" th:style="${grade} != null? 'display: none' : 'display: block'">
+                                            <div style="float: left"><input type="button" style="width: 80px; height: 22px" value="Bad"></div>
+                                            <div style="float: left"><input type="button" style="width: 80px; height: 22px" value="Poor"></div>
+                                            <div style="float: left"><input type="button" style="width: 80px; height: 22px" value="Fair"></div>
+                                            <div style="float: left"><input type="button" style="width: 80px; height: 22px" value="Good"></div>
+                                            <div style="float: left"><input type="button" style="width: 80px; height: 22px" value="Excellent"></div>
+                                            <input type="range" step="1" style="width: 400px">
+                                        </div>
+<!--如果已评分，则该div模块显示查询到的分数，否者该模块不显示数值-->
+                                        <div class="form-group range__value" id = "span3">
+                                            <span th:text="${grade} != null? ${grade.get(0).getScore()}: ''"></span>
+                                        </div>
+                                        <div class="form-group range__value" id = "span2">
+<!--如果已评分，则该div模块显示“已评分”，否则该模块什么都不显示-->
+                                            <span th:text="${grade} != null? '已评分':''"></span>
+                                        </div>
+                                    </form>
+                                </div>
+                                <ul class="pagination">
+<!--点击提交后将当前用户评分的**图片数**传入user表中-->
+                                    <li><a th:href="@{/totalCount(uId=${uid})}" onclick="alertConfirm()">提交</a></li>
+<!--点击提交后，弹出确认框，确认后返回主页面-->
+                                    <script>
+                                        function alertConfirm() {
+                                            let res = confirm("提交后不能修改，确认提交?")
+                                            if (res) {
+                                                window.location.href="main.html"
+                                            }
+                                        }
+                                    </script>
+                                    <li><a th:href="@{/deleteScore(pn = ${page.getCurrent()}, re_pn = ${rePage.getCurrent()})}" id = "delScore">重置</a></li>
+<!--                                    修改前顺序代码-->
+                                    <li><a href="#"  th:style="${count == 1 ? 'pointer-events: none':''}" th:href="@{/gallery_two.html(pn=-1)}"><<</a></li>
+                                    <li><a href="#" th:style="${count == picCount ? 'pointer-events: none':''}" th:href="@{/gallery_two.html(pn=1)}">>></a></li>
+
+<!--                                    <li><a th:style="${count == 1 ? 'pointer-events: none':''}" th:href="@{/gallery.html(pn=(${page.getCurrent()} - ${add} + ${picCount} == ${picCount} ? ${picCount}: (${page.getCurrent()} - ${add} + ${picCount}) % ${picCount}), cnt = -1)}"><<</a></li>-->
+<!--                                    <li><a th:style="${count == picCount ? 'pointer-events: none':''}" th:href="@{/gallery.html(pn=(${page.getCurrent()} + ${add} == ${picCount}? ${picCount}: (${page.getCurrent()} + ${add}) % ${picCount}), cnt = 1)}">>></a></li>-->
+                                </ul>
+                            </div>
+
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+        <!--body wrapper end-->
+
+        <!--footer section start-->
+        <footer>
+            2014 &copy; AdminEx by <a href="http://www.mycodes.net/" target="_blank">源码之家</a>
+        </footer>
+        <!--footer section end-->
+
+
+    </div>
+    <!-- main content end-->
+</section>
+
+<!-- Placed js at the end of the document so the pages load faster -->
+<script src="js/jquery-1.10.2.min.js"></script>
+<script src="js/jquery-ui-1.9.2.custom.min.js"></script>
+<script src="js/jquery-migrate-1.2.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/modernizr.min.js"></script>
+<script src="js/jquery.nicescroll.js"></script>
+<script src="js/jquery.isotope.js"></script>
+
+<!--common scripts for all pages-->
+<script src="js/scripts.js"></script>
+
+<script type="text/javascript">
+    $(function() {
+        var $container = $('#gallery');
+        $container.isotope({
+            itemSelector: '.item',
+            animationOptions: {
+                duration: 750,
+                easing: 'linear',
+                queue: false
+            }
+        });
+
+        // filter items when filter link is clicked
+        $('#filters a').click(function() {
+            var selector = $(this).attr('data-filter');
+            $container.isotope({filter: selector});
+            return false;
+        });
+    });
+</script>
+
+<script src="js/self_script.js"></script>
+
+
+</body>
+</html>
