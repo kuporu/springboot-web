@@ -6,4 +6,6 @@
 2. 本地获取git代码
 主页面点击get from VCS, url输入https://github.com/kuporu/springboot-web.git
 ## 数据创建
+1. mysql8.0.23
+2. sql文件：resources/grade.sql
 
